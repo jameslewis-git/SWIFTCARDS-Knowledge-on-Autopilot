@@ -25,9 +25,7 @@ export default function HomePage() {
   return (
     <div className="relative min-h-screen">
       {/* Galaxy Background */}
-      <div className="absolute inset-0 z-0">
-        <GalaxyBackground />
-      </div>
+      <GalaxyBackground />
       
       {/* Content */}
       <div className="relative z-10">

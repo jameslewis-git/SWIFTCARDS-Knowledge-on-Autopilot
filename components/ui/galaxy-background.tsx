@@ -58,6 +58,78 @@ export function GalaxyBackground({ className = "", style = {} }: GalaxyBackgroun
     };
   }, [isLoaded, isDark]);
 
+  // Remove Spline badges aggressively
+  useEffect(() => {
+    const removeSplineBadges = () => {
+      const selectors = [
+        '[data-spline-badge]',
+        '.spline-badge',
+        '[class*="spline-badge"]',
+        '[id*="spline-badge"]',
+        'div[style*="spline"]',
+        'div[style*="Spline"]',
+        'iframe[src*="spline"]',
+        'iframe[src*="Spline"]',
+        'a[href*="spline"]',
+        'a[href*="Spline"]',
+        '[class*="spline"]',
+        '[class*="Spline"]',
+        '[id*="spline"]',
+        '[id*="Spline"]',
+        '[class*="built"]',
+        '[id*="built"]',
+        '[class*="with"]',
+        '[id*="with"]'
+      ]
+
+      selectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector)
+        elements.forEach(element => {
+          if (element instanceof HTMLElement) {
+            element.style.display = 'none'
+            element.style.visibility = 'hidden'
+            element.style.opacity = '0'
+            element.style.pointerEvents = 'none'
+            element.style.position = 'absolute'
+            element.style.left = '-9999px'
+            element.style.top = '-9999px'
+            element.style.width = '0'
+            element.style.height = '0'
+            element.style.overflow = 'hidden'
+            element.style.clip = 'rect(0, 0, 0, 0)'
+            element.style.margin = '0'
+            element.style.padding = '0'
+            element.style.border = '0'
+            element.style.zIndex = '-9999'
+            element.style.transform = 'scale(0)'
+            element.style.maxWidth = '0'
+            element.style.maxHeight = '0'
+            element.style.minWidth = '0'
+            element.style.minHeight = '0'
+          }
+        })
+      })
+    }
+
+    // Remove immediately
+    removeSplineBadges()
+
+    // Set up observer to remove any dynamically added badges
+    const observer = new MutationObserver(removeSplineBadges)
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    })
+
+    // Also check periodically
+    const interval = setInterval(removeSplineBadges, 1000)
+
+    return () => {
+      observer.disconnect()
+      clearInterval(interval)
+    }
+  }, [])
+
   const onLoad = (splineApp: any) => {
     splineRef.current = splineApp;
     setIsLoaded(true);
@@ -65,14 +137,17 @@ export function GalaxyBackground({ className = "", style = {} }: GalaxyBackgroun
 
     return (
     <div 
-      className={`relative w-full h-full pointer-events-auto overflow-hidden ${className}`}
+      className={`fixed inset-0 w-full h-full pointer-events-auto overflow-hidden ${className}`}
       style={{
-        position: 'relative',
-        width: '100%',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
         height: '100vh',
         pointerEvents: 'auto',
         overflow: 'hidden',
         cursor: isDark ? 'none' : 'default', // Hide cursor only in dark mode
+        zIndex: 0,
         ...style
       }}
     >
@@ -80,6 +155,9 @@ export function GalaxyBackground({ className = "", style = {} }: GalaxyBackgroun
       <style jsx>{`
         iframe[src*="spline.design"] {
           position: relative !important;
+          transform: scale(1.3) !important;
+          transform-origin: center center !important;
+          overflow: hidden !important;
         }
         iframe[src*="spline.design"]::after {
           content: none !important;
@@ -87,12 +165,52 @@ export function GalaxyBackground({ className = "", style = {} }: GalaxyBackgroun
         /* Hide Spline badge */
         [data-spline-badge] {
           display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          position: absolute !important;
+          left: -9999px !important;
+          top: -9999px !important;
+          width: 0 !important;
+          height: 0 !important;
+          overflow: hidden !important;
+          clip: rect(0, 0, 0, 0) !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          border: 0 !important;
+          z-index: -9999 !important;
+          transform: scale(0) !important;
+          max-width: 0 !important;
+          max-height: 0 !important;
+          min-width: 0 !important;
+          min-height: 0 !important;
         }
         /* Alternative selectors for Spline badge */
         .spline-badge,
         [class*="spline"],
-        [id*="spline"] {
+        [id*="spline"],
+        [class*="built"],
+        [id*="built"],
+        [class*="with"],
+        [id*="with"] {
           display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          position: absolute !important;
+          left: -9999px !important;
+          top: -9999px !important;
+          width: 0 !important;
+          height: 0 !important;
+          overflow: hidden !important;
+          clip: rect(0, 0, 0, 0) !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          border: 0 !important;
+          z-index: -9999 !important;
+          transform: scale(0) !important;
+          max-width: 0 !important;
+          max-height: 0 !important;
+          min-width: 0 !important;
+          min-height: 0 !important;
         }
       `}</style>
       {isDark ? (
@@ -103,15 +221,25 @@ export function GalaxyBackground({ className = "", style = {} }: GalaxyBackgroun
               <div className="text-white text-lg">Loading 3D Background...</div>
             </div>
           }>
-            <Spline
+            <div 
+              className="relative w-full h-full overflow-hidden"
               style={{
+                transform: 'scale(1.3)',
+                transformOrigin: 'center center',
                 width: '100%',
                 height: '100vh',
-                pointerEvents: 'auto',
               }}
-              scene="https://prod.spline.design/us3ALejTXl6usHZ7/scene.splinecode"
-              onLoad={onLoad}
-            />
+            >
+              <Spline
+                style={{
+                  width: '100%',
+                  height: '100vh',
+                  pointerEvents: 'auto',
+                }}
+                scene="https://prod.spline.design/us3ALejTXl6usHZ7/scene.splinecode"
+                onLoad={onLoad}
+              />
+            </div>
           </Suspense>
           
           {/* Custom cursor for dark mode */}
@@ -282,6 +410,53 @@ export function GalaxyBackground({ className = "", style = {} }: GalaxyBackgroun
               />
            </>
          )}
+         
+         {/* Hide Spline attribution badge */}
+         <style jsx>{`
+           [data-spline-badge],
+           .spline-badge,
+           [class*="spline-badge"],
+           [id*="spline-badge"],
+           div[style*="spline"],
+           div[style*="Spline"],
+           iframe[src*="spline"],
+           iframe[src*="Spline"],
+           a[href*="spline"],
+           a[href*="Spline"],
+           [class*="spline"],
+           [class*="Spline"],
+           [id*="spline"],
+           [id*="Spline"],
+           [data-spline-badge] *,
+           .spline-badge *,
+           [class*="spline"] *,
+           [id*="spline"] *,
+           [class*="built"],
+           [id*="built"],
+           [class*="with"],
+           [id*="with"] {
+             display: none !important;
+             visibility: hidden !important;
+             opacity: 0 !important;
+             pointer-events: none !important;
+             position: absolute !important;
+             left: -9999px !important;
+             top: -9999px !important;
+             width: 0 !important;
+             height: 0 !important;
+             overflow: hidden !important;
+             clip: rect(0, 0, 0, 0) !important;
+             margin: 0 !important;
+             padding: 0 !important;
+             border: 0 !important;
+             z-index: -9999 !important;
+             transform: scale(0) !important;
+             max-width: 0 !important;
+             max-height: 0 !important;
+             min-width: 0 !important;
+             min-height: 0 !important;
+           }
+         `}</style>
     </div>
   );
 } 

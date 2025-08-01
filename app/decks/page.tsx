@@ -101,9 +101,7 @@ export default function DecksPage() {
     return (
       <div className="relative min-h-screen flex items-center justify-center">
         {/* Galaxy Background */}
-        <div className="absolute inset-0 z-0">
-          <GalaxyBackground />
-        </div>
+        <GalaxyBackground />
         
         {/* Content */}
         <div className="relative z-10 text-center pt-32">
@@ -125,9 +123,7 @@ export default function DecksPage() {
   return (
     <div className="relative min-h-screen">
       {/* Galaxy Background */}
-      <div className="absolute inset-0 z-0">
-        <GalaxyBackground />
-      </div>
+      <GalaxyBackground />
       
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 pt-32 pb-8">

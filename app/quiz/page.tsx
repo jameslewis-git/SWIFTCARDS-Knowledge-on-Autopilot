@@ -163,9 +163,7 @@ export default function QuizPage() {
     return (
       <div className="min-h-screen relative">
         {/* Background */}
-        <div className="fixed inset-0 z-0">
-          <GalaxyBackground />
-        </div>
+        <GalaxyBackground />
         
         {/* Content */}
         <div className="relative z-10 flex items-center justify-center min-h-screen pt-32">
@@ -175,12 +173,12 @@ export default function QuizPage() {
               : 'bg-white/80 border border-gray-200/50'
           }`}>
             <CardContent className="text-center p-8">
-              <Trophy className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+          <Trophy className="h-12 w-12 text-blue-600 mx-auto mb-4" />
               <h2 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>Please sign in</h2>
               <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>You need to be signed in to take quizzes.</p>
-              <Link href="/auth/login">
-                <Button>Sign In</Button>
-              </Link>
+          <Link href="/auth/login">
+            <Button>Sign In</Button>
+          </Link>
             </CardContent>
           </Card>
         </div>
@@ -192,9 +190,7 @@ export default function QuizPage() {
     return (
       <div className="min-h-screen relative">
         {/* Background */}
-        <div className="fixed inset-0 z-0">
-          <GalaxyBackground />
-        </div>
+        <GalaxyBackground />
         
         {/* Content */}
         <div className="relative z-10 container mx-auto px-4 pt-32 pb-8">
@@ -292,9 +288,7 @@ export default function QuizPage() {
     return (
       <div className="min-h-screen relative">
         {/* Background */}
-        <div className="fixed inset-0 z-0">
-          <GalaxyBackground />
-        </div>
+        <GalaxyBackground />
         
         {/* Content */}
         <div className="relative z-10 container mx-auto px-4 pt-32 pb-8">
@@ -393,34 +387,32 @@ export default function QuizPage() {
     return (
       <div className="min-h-screen relative">
         {/* Background */}
-        <div className="fixed inset-0 z-0">
-          <GalaxyBackground />
-        </div>
+        <GalaxyBackground />
         
         {/* Content */}
         <div className="relative z-10 container mx-auto px-4 pt-32 pb-8">
-                      <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-center mb-8"
-            >
-              <Trophy className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center mb-8"
+          >
+            <Trophy className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
               <h1 className={`text-4xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>Quiz Complete!</h1>
-              <div className="flex items-center justify-center space-x-8 mb-8">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-green-600">{correctAnswers}</div>
+            <div className="flex items-center justify-center space-x-8 mb-8">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-600">{correctAnswers}</div>
                   <div className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Correct</div>
-                </div>
-                <div className="text-center">
+              </div>
+              <div className="text-center">
                   <div className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>{results.length}</div>
                   <div className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Total</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">{accuracy.toFixed(1)}%</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-blue-600">{accuracy.toFixed(1)}%</div>
                   <div className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Accuracy</div>
                 </div>
-              </div>
-            </motion.div>
+            </div>
+          </motion.div>
 
           {/* Results Details */}
           <div className="max-w-4xl mx-auto space-y-4 mb-8">

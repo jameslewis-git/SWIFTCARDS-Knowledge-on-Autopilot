@@ -53,9 +53,7 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen relative">
         {/* Background */}
-        <div className="fixed inset-0 z-0">
-          <GalaxyBackground />
-        </div>
+        <GalaxyBackground />
         
         {/* Content */}
         <div className="relative z-10 flex items-center justify-center min-h-screen pt-32">
@@ -81,9 +79,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen relative">
       {/* Background */}
-      <div className="fixed inset-0 z-0">
-        <GalaxyBackground />
-      </div>
+      <GalaxyBackground />
       
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 pt-32 pb-8">

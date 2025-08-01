@@ -179,9 +179,7 @@ export default function UploadPage() {
   return (
     <div className="min-h-screen relative">
       {/* Background */}
-      <div className="fixed inset-0 z-0">
-        <GalaxyBackground />
-      </div>
+      <GalaxyBackground />
       
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 pt-32 pb-8">

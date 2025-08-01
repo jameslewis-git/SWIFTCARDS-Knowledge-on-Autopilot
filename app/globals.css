@@ -95,7 +95,7 @@
   }
 }
 
-/* Hide Spline attribution badge */
+/* Hide Spline attribution badge - Comprehensive */
 @layer utilities {
   /* Hide Spline badge and attribution */
   [data-spline-badge],
@@ -104,22 +104,72 @@
   [id*="spline-badge"],
   iframe[src*="spline.design"] + div,
   iframe[src*="spline.design"]::after,
-  iframe[src*="spline.design"]::before {
+  iframe[src*="spline.design"]::before,
+  div[style*="spline"],
+  div[style*="Spline"],
+  iframe[src*="spline"],
+  iframe[src*="Spline"],
+  a[href*="spline"],
+  a[href*="Spline"],
+  [class*="spline"],
+  [class*="Spline"],
+  [id*="spline"],
+  [id*="Spline"],
+  [data-spline-badge] *,
+  .spline-badge *,
+  [class*="spline"] *,
+  [id*="spline"] * {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
     pointer-events: none !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    z-index: -9999 !important;
+    transform: scale(0) !important;
+    max-width: 0 !important;
+    max-height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
   }
   
   /* Hide any Spline-related elements */
   [class*="spline"][class*="badge"],
   [id*="spline"][id*="badge"],
   [class*="attribution"],
-  [id*="attribution"] {
+  [id*="attribution"],
+  [class*="built"],
+  [id*="built"],
+  [class*="with"],
+  [id*="with"] {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
     pointer-events: none !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    z-index: -9999 !important;
+    transform: scale(0) !important;
+    max-width: 0 !important;
+    max-height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
   }
 }
 
