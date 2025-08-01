@@ -14,6 +14,8 @@ import { useToast } from "@/hooks/use-toast"
 import { motion } from "framer-motion"
 import { GalaxyBackground } from "@/components/ui/galaxy-background"
 import { useTheme } from "next-themes"
+import { useSupabaseAuth } from "@/hooks/use-supabase-auth"
+import { supabase } from "@/lib/supabase"
 
 interface UploadedFile {
   file: File
@@ -25,6 +27,7 @@ interface UploadedFile {
 
 export default function UploadPage() {
   const { theme } = useTheme()
+  const { user } = useSupabaseAuth()
   const isDark = theme === 'dark'
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
   const [textInput, setTextInput] = useState("")
@@ -63,6 +66,12 @@ export default function UploadPage() {
 
   const processFile = async (fileObj: UploadedFile, index: number) => {
     try {
+      // Get the current session token
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.access_token) {
+        throw new Error("Not authenticated")
+      }
+
       const formData = new FormData()
       formData.append("file", fileObj.file)
       formData.append("deckName", deckName || fileObj.file.name)
@@ -73,6 +82,9 @@ export default function UploadPage() {
 
       const response = await fetch("/api/upload/process", {
         method: "POST",
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+        },
         body: formData,
       })
 
@@ -125,9 +137,18 @@ export default function UploadPage() {
     if (!textInput.trim()) return
 
     try {
+      // Get the current session token
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.access_token) {
+        throw new Error("Not authenticated")
+      }
+
       const response = await fetch("/api/upload/text", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({
           text: textInput,
           deckName: deckName || "Text Input Deck",

@@ -1,14 +1,21 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { generateText } from "ai"
 import { google } from "@ai-sdk/google"
-import { connectDB } from "@/lib/mongodb"
-import { Deck } from "@/models/Deck"
-import { getUserFromToken } from "@/lib/auth"
+import { supabase } from "@/lib/supabase"
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await getUserFromToken(request)
-    if (!user) {
+    // Get the authorization header
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const token = authHeader.substring(7) // Remove 'Bearer ' prefix
+    
+    // Verify the token with Supabase
+    const { data: { user }, error } = await supabase.auth.getUser(token)
+    if (error || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
@@ -39,19 +46,27 @@ export async function POST(request: NextRequest) {
     // Generate flashcards using AI
     const cards = await generateFlashcards(extractedContent)
 
-    // Save to database
-    await connectDB()
-    const deck = await Deck.create({
-      name: deckName || file.name,
-      description: `Generated from ${file.name}`,
-      cards,
-      tags: tags ? tags.split(",").map((tag) => tag.trim()) : [],
-      userId: user.id,
-      createdAt: new Date(),
-    })
+    // Save to database using Supabase
+    const { data: deck, error: deckError } = await supabase
+      .from('decks')
+      .insert({
+        name: deckName || file.name,
+        description: `Generated from ${file.name}`,
+        cards: cards,
+        tags: tags ? tags.split(",").map((tag) => tag.trim()) : [],
+        user_id: user.id,
+        created_at: new Date().toISOString(),
+      })
+      .select()
+      .single()
+
+    if (deckError) {
+      console.error("Database error:", deckError)
+      return NextResponse.json({ error: "Failed to save deck" }, { status: 500 })
+    }
 
     return NextResponse.json({
-      deckId: deck._id,
+      deckId: deck.id,
       cards: cards.length,
       message: "Flashcards generated successfully",
     })
