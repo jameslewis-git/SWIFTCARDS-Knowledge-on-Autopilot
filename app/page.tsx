@@ -8,6 +8,7 @@ import { Brain, Upload, Zap, Trophy, Users, Globe, Mic, Eye } from "lucide-react
 import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
 import { motion } from "framer-motion"
+import { AuroraBackground } from "@/components/aurora-background"
 
 export default function HomePage() {
   const { user, loading } = useAuth()
@@ -20,7 +21,7 @@ export default function HomePage() {
   if (!mounted) return null
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
+    <AuroraBackground>
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 px-4">
         <div className="container mx-auto max-w-6xl">
@@ -131,6 +132,6 @@ export default function HomePage() {
           </motion.div>
         </div>
       </section>
-    </div>
+    </AuroraBackground>
   )
 }
