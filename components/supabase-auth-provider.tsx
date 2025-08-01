@@ -2,10 +2,20 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { User } from '@supabase/supabase-js'
+
+interface AppUser {
+  id: string
+  email: string
+  name: string
+  created_at: string
+  updated_at: string
+  xp: number
+  level: number
+  badges: string[]
+}
 
 interface AuthContextType {
-  user: User | null
+  user: AppUser | null
   loading: boolean
   login: (email: string, password: string) => Promise<void>
   signup: (name: string, email: string, password: string) => Promise<void>
@@ -15,7 +25,7 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function SupabaseAuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<AppUser | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -30,6 +40,9 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
           name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
           created_at: session.user.created_at,
           updated_at: session.user.updated_at || session.user.created_at,
+          xp: 0, // Default XP
+          level: 1, // Default level
+          badges: [], // Default empty badges array
         }
         setUser(transformedUser)
       } else {
@@ -51,6 +64,9 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
             name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
             created_at: session.user.created_at,
             updated_at: session.user.updated_at || session.user.created_at,
+            xp: 0, // Default XP
+            level: 1, // Default level
+            badges: [], // Default empty badges array
           }
           setUser(transformedUser)
         } else {

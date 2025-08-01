@@ -199,11 +199,11 @@ export default function DashboardPage() {
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Level {user.level}</span>
-                  <span className="text-sm text-gray-600">{user.xp} XP</span>
+                  <span className="text-sm font-medium">Level {user.level || 1}</span>
+                  <span className="text-sm text-gray-600">{user.xp || 0} XP</span>
                 </div>
-                <Progress value={(user.xp % 1000) / 10} className="h-2" />
-                <p className="text-xs text-gray-600">{1000 - (user.xp % 1000)} XP to next level</p>
+                <Progress value={((user.xp || 0) % 1000) / 10} className="h-2" />
+                <p className="text-xs text-gray-600">{1000 - ((user.xp || 0) % 1000)} XP to next level</p>
               </div>
             </CardContent>
           </Card>
@@ -218,7 +218,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-2">
-                {user.badges.length > 0 ? (
+                {user.badges && user.badges.length > 0 ? (
                   user.badges.map((badge, index) => (
                     <Badge key={index} variant="secondary">
                       {badge}
