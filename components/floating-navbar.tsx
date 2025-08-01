@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Brain, Sun, Moon, User, LogOut, Sparkles, Zap, Rocket, Star, Crown, Menu, X } from "lucide-react"
+import { Brain, Sun, Moon, User, LogOut, Sparkles, Zap, Rocket, Star, Crown, Menu, X, BookOpen } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useAuth } from "@/hooks/use-auth"
 import { AnimeNavBar } from "@/components/ui/anime-navbar"
@@ -34,16 +34,17 @@ export function FloatingNavbar() {
 
   // Navigation items for the AnimeNavBar
   const navItems = [
+    { name: "Home", url: "/", icon: Star },
     { name: "Features", url: "/features", icon: Zap },
     { name: "Pricing", url: "/pricing", icon: Crown },
     { name: "Demo", url: "/demo", icon: Rocket },
-    { name: "My Decks", url: "/decks", icon: Star },
+    { name: "My Decks", url: "/decks", icon: BookOpen },
     { name: "Quiz", url: "/quiz", icon: Brain },
   ]
 
   // Determine default active tab based on current pathname
   const pathname = usePathname()
-  const defaultActive = navItems.find(item => item.url === pathname)?.name || "Features"
+  const defaultActive = navItems.find(item => item.url === pathname)?.name || "Home"
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[9999]">

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Brain, Menu, X, Sun, Moon, User, LogOut, Sparkles, Zap, Rocket, Star, Crown } from "lucide-react"
+import { Brain, Menu, X, Sun, Moon, User, LogOut, Sparkles, Zap, Rocket, Star, Crown, BookOpen } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useAuth } from "@/hooks/use-auth"
 import { motion, AnimatePresence } from "framer-motion"
@@ -30,10 +30,11 @@ export function Navbar() {
   }, [])
 
   const navItems = [
+    { href: "/", label: "Home", icon: Star, color: "from-yellow-500 to-orange-500" },
     { href: "/features", label: "Features", icon: Zap, color: "from-blue-500 to-cyan-500" },
     { href: "/pricing", label: "Pricing", icon: Crown, color: "from-purple-500 to-pink-500" },
     { href: "/demo", label: "Demo", icon: Rocket, color: "from-green-500 to-emerald-500" },
-    { href: "/decks", label: "My Decks", icon: Star, color: "from-yellow-500 to-orange-500" },
+    { href: "/decks", label: "My Decks", icon: BookOpen, color: "from-yellow-500 to-orange-500" },
     { href: "/quiz", label: "Quiz", icon: Brain, color: "from-indigo-500 to-purple-500" },
   ]
 
