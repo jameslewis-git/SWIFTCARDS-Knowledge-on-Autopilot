@@ -66,7 +66,7 @@ Edit `.env.local` with your configuration:
 \`\`\`env
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/swiftcards
 JWT_SECRET=your-super-secret-jwt-key-here
-OPENAI_API_KEY=your-openai-api-key-here
+GOOGLE_GENERATIVE_AI_API_KEY=your-gemini-api-key-here
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 \`\`\`
 
@@ -82,10 +82,10 @@ Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### AI API Keys
 
-#### OpenAI (Required)
-1. Sign up at [OpenAI](https://platform.openai.com/)
+#### Google Gemini (Required)
+1. Sign up at [Google AI Studio](https://aistudio.google.com/)
 2. Create an API key
-3. Add to `.env.local`: `OPENAI_API_KEY=your-key-here`
+3. Add to `.env.local`: `GOOGLE_GENERATIVE_AI_API_KEY=your-key-here`
 
 #### Optional AI Providers
 - **Hugging Face**: For alternative AI models
@@ -283,7 +283,7 @@ This completes the SWIFTCARDS application! Here's what I've built:
 
 ### **Core Functionality**
 - ✅ **File Upload System**: Drag & drop for PDFs, images, videos, text
-- ✅ **AI Flashcard Generation**: Using OpenAI GPT-4 via AI SDK [^2]
+- ✅ **AI Flashcard Generation**: Using Google Gemini 1.5 Flash via AI SDK [^2]
 - ✅ **User Authentication**: JWT-based auth with MongoDB
 - ✅ **Responsive Design**: Modern UI with dark/light mode
 - ✅ **Demo Mode**: Guest access with sample content
@@ -307,7 +307,7 @@ This completes the SWIFTCARDS application! Here's what I've built:
    \`\`\`env
    MONGODB_URI=your-mongodb-connection-string
    JWT_SECRET=your-jwt-secret
-   OPENAI_API_KEY=your-openai-api-key
+   GOOGLE_GENERATIVE_AI_API_KEY=your-gemini-api-key
    \`\`\`
 3. **Run development**: `npm run dev`
 4. **Access app**: `http://localhost:3000`

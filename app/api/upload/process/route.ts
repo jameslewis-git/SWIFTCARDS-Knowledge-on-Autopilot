@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { generateText } from "ai"
-import { openai } from "@ai-sdk/openai"
+import { google } from "@ai-sdk/google"
 import { connectDB } from "@/lib/mongodb"
 import { Deck } from "@/models/Deck"
 import { getUserFromToken } from "@/lib/auth"
@@ -82,7 +82,7 @@ async function extractVideoContent(file: File): Promise<string> {
 async function generateFlashcards(content: string) {
   try {
     const { text } = await generateText({
-      model: openai("gpt-4o"),
+      model: google("gemini-1.5-flash"),
       system: `You are an expert educational content creator. Generate high-quality flashcards from the provided content. 
 
 Rules:

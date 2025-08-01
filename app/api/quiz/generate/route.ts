@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { generateText } from "ai"
-import { openai } from "@ai-sdk/openai"
+import { google } from "@ai-sdk/google"
 import { connectDB } from "@/lib/mongodb"
 import { Deck } from "@/models/Deck"
 import { getUserFromToken } from "@/lib/auth"
@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
       quizCards.map(async (card, index) => {
         try {
           const { text } = await generateText({
-            model: openai("gpt-4o"),
+            model: google("gemini-1.5-flash"),
             system: `You are a quiz generator. Create a quiz question based on the provided flashcard content. 
 
 Generate either:
