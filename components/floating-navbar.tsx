@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Brain, Sun, Moon, User, LogOut, Sparkles, Zap, Rocket, Star, Crown, Menu, X, BookOpen } from "lucide-react"
 import { useTheme } from "next-themes"
-import { useAuth } from "@/hooks/use-auth"
+import { useSupabaseAuth } from "@/hooks/use-supabase-auth"
 import { AnimeNavBar } from "@/components/ui/anime-navbar"
 import {
   DropdownMenu,
@@ -19,7 +19,7 @@ import {
 
 export function FloatingNavbar() {
   const { theme, setTheme } = useTheme()
-  const { user, logout } = useAuth()
+  const { user, logout } = useSupabaseAuth()
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {

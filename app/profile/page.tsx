@@ -26,12 +26,12 @@ import {
   Shield,
   Download
 } from "lucide-react"
-import { useAuth } from "@/hooks/use-auth"
+import { useSupabaseAuth } from "@/hooks/use-supabase-auth"
 import { GalaxyBackground } from "@/components/ui/galaxy-background"
 import { useTheme } from "next-themes"
 
 export default function ProfilePage() {
-  const { user } = useAuth()
+  const { user } = useSupabaseAuth()
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const [isEditing, setIsEditing] = useState(false)

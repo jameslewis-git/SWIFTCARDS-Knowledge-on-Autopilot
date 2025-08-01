@@ -7,12 +7,12 @@ import { User } from '@supabase/supabase-js'
 interface AuthContextType {
   user: User | null
   loading: boolean
-  signUp: (email: string, password: string, name: string) => Promise<{ error: any }>
-  signIn: (email: string, password: string) => Promise<{ error: any }>
-  signOut: () => Promise<void>
+  login: (email: string, password: string) => Promise<void>
+  signup: (name: string, email: string, password: string) => Promise<void>
+  logout: () => void
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function SupabaseAuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -22,7 +22,19 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
     // Get initial session
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession()
-      setUser(session?.user ?? null)
+      if (session?.user) {
+        // Transform Supabase user to match our app's user interface
+        const transformedUser = {
+          id: session.user.id,
+          email: session.user.email || '',
+          name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
+          created_at: session.user.created_at,
+          updated_at: session.user.updated_at || session.user.created_at,
+        }
+        setUser(transformedUser)
+      } else {
+        setUser(null)
+      }
       setLoading(false)
     }
 
@@ -31,7 +43,19 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        setUser(session?.user ?? null)
+        if (session?.user) {
+          // Transform Supabase user to match our app's user interface
+          const transformedUser = {
+            id: session.user.id,
+            email: session.user.email || '',
+            name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
+            created_at: session.user.created_at,
+            updated_at: session.user.updated_at || session.user.created_at,
+          }
+          setUser(transformedUser)
+        } else {
+          setUser(null)
+        }
         setLoading(false)
       }
     )
@@ -39,7 +63,7 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
     return () => subscription.unsubscribe()
   }, [])
 
-  const signUp = async (email: string, password: string, name: string) => {
+  const signup = async (name: string, email: string, password: string) => {
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -49,23 +73,27 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
         }
       }
     })
-    return { error }
+    if (error) {
+      throw new Error(error.message)
+    }
   }
 
-  const signIn = async (email: string, password: string) => {
+  const login = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
-    return { error }
+    if (error) {
+      throw new Error(error.message)
+    }
   }
 
-  const signOut = async () => {
+  const logout = async () => {
     await supabase.auth.signOut()
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   )

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { useAuth } from "@/hooks/use-auth"
+import { useSupabaseAuth } from "@/hooks/use-supabase-auth"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -49,7 +49,7 @@ interface Deck {
 export default function EditDeckPage() {
   const params = useParams()
   const router = useRouter()
-  const { user } = useAuth()
+  const { user } = useSupabaseAuth()
   const { toast } = useToast()
   
   const [deck, setDeck] = useState<Deck | null>(null)

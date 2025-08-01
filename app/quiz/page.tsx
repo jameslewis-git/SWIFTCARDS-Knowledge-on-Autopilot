@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useAuth } from "@/hooks/use-auth"
+import { useSupabaseAuth } from "@/hooks/use-supabase-auth"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -35,7 +35,7 @@ interface QuizResult {
 }
 
 export default function QuizPage() {
-  const { user } = useAuth()
+  const { user } = useSupabaseAuth()
   const { theme } = useTheme()
   const isDark = theme === 'dark'
   const { toast } = useToast()

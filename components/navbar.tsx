@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Brain, Menu, X, Sun, Moon, User, LogOut, Sparkles, Zap, Rocket, Star, Crown, BookOpen } from "lucide-react"
 import { useTheme } from "next-themes"
-import { useAuth } from "@/hooks/use-auth"
+import { useSupabaseAuth } from "@/hooks/use-supabase-auth"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   DropdownMenu,
@@ -19,7 +19,7 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { theme, setTheme } = useTheme()
-  const { user, logout } = useAuth()
+  const { user, logout } = useSupabaseAuth()
 
   useEffect(() => {
     const handleScroll = () => {

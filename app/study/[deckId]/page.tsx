@@ -9,7 +9,7 @@ import { Progress } from "@/components/ui/progress"
 import { ChevronLeft, ChevronRight, RotateCcw, Volume2, Eye, EyeOff, CheckCircle, XCircle, Star } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useToast } from "@/hooks/use-toast"
-import { useAuth } from "@/hooks/use-auth"
+import { useSupabaseAuth } from "@/hooks/use-supabase-auth"
 
 interface FlashcardType {
   id: number
@@ -31,7 +31,7 @@ interface DeckType {
 export default function StudyPage() {
   const params = useParams()
   const router = useRouter()
-  const { user } = useAuth()
+  const { user } = useSupabaseAuth()
   const { toast } = useToast()
   const deckId = params.deckId as string
 

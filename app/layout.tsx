@@ -4,7 +4,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
-import { AuthProvider } from "@/components/auth-provider"
+import { SupabaseAuthProvider } from "@/components/supabase-auth-provider"
 import { FloatingNavbar } from "@/components/floating-navbar"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -24,11 +24,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <AuthProvider>
+          <SupabaseAuthProvider>
             <FloatingNavbar />
             <main>{children}</main>
             <Toaster />
-          </AuthProvider>
+          </SupabaseAuthProvider>
         </ThemeProvider>
       </body>
     </html>

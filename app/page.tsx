@@ -6,12 +6,12 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { Badge } from "@/components/ui/badge"
 import { Brain, Upload, Zap, Trophy, Users, Globe, Mic, Eye } from "lucide-react"
 import Link from "next/link"
-import { useAuth } from "@/hooks/use-auth"
+import { useSupabaseAuth } from "@/hooks/use-supabase-auth"
 import { GalaxyBackground } from "@/components/ui/galaxy-background"
 import { useTheme } from "next-themes"
 
 export default function HomePage() {
-  const { user, loading } = useAuth()
+  const { user, loading } = useSupabaseAuth()
   const [mounted, setMounted] = useState(false)
   const { theme } = useTheme()
   const isDark = theme === 'dark'
