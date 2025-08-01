@@ -1,3 +1,6 @@
+-- Basic Supabase Setup for SWIFTCARDS
+-- Run this in Supabase SQL Editor
+
 -- Create decks table
 CREATE TABLE IF NOT EXISTS decks (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -30,7 +33,7 @@ CREATE TABLE IF NOT EXISTS study_sessions (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Enable RLS on all tables
+-- Enable RLS on our tables (not auth.users)
 ALTER TABLE decks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cards ENABLE ROW LEVEL SECURITY;
 ALTER TABLE study_sessions ENABLE ROW LEVEL SECURITY;

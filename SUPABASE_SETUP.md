@@ -41,8 +41,13 @@ NODE_ENV=development
 
 1. Go to your Supabase dashboard
 2. Click "SQL Editor"
-3. Copy and paste the contents of `supabase-schema.sql`
+3. Copy and paste the contents of `supabase-basic-setup.sql`
 4. Click "Run" to execute the schema
+
+**Note**: If you get any errors, you can also run the commands one by one:
+1. First run the table creation commands
+2. Then run the RLS enable commands
+3. Finally run the policy creation commands
 
 ## Step 5: Configure Authentication
 
@@ -75,10 +80,15 @@ NODE_ENV=production
 
 ### Common Issues:
 
-1. **CORS Errors**: Add your domain to Supabase Auth settings
-2. **RLS Policies**: Make sure Row Level Security is enabled
-3. **API Key Issues**: Verify your anon key is correct
-4. **Database Connection**: Check if schema was applied correctly
+1. **"must be owner of table users" Error**: 
+   - This happens when trying to modify `auth.users` table
+   - Use `supabase-basic-setup.sql` instead of `supabase-schema.sql`
+   - The `auth.users` table is managed by Supabase automatically
+
+2. **CORS Errors**: Add your domain to Supabase Auth settings
+3. **RLS Policies**: Make sure Row Level Security is enabled
+4. **API Key Issues**: Verify your anon key is correct
+5. **Database Connection**: Check if schema was applied correctly
 
 ### Useful Supabase Dashboard Sections:
 
