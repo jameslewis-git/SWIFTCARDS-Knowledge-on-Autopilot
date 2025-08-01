@@ -1,10 +1,17 @@
+"use client";
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Check, Star, Zap, Crown, Users, Infinity, Upload, Brain } from "lucide-react"
 import Link from "next/link"
+import { GalaxyBackground } from "@/components/ui/galaxy-background"
+import { useTheme } from "next-themes"
 
 export default function PricingPage() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const plans = [
     {
       name: "Free",
@@ -99,14 +106,20 @@ export default function PricingPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-16">
+    <div className="relative min-h-screen">
+      {/* Galaxy Background */}
+      <div className="absolute inset-0 z-0">
+        <GalaxyBackground />
+      </div>
+      
+      {/* Content */}
+      <div className="relative z-10 container mx-auto px-4 pt-32 pb-16">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+          <h1 className={`text-4xl md:text-6xl font-bold mb-6 ${isDark ? 'text-white drop-shadow-2xl' : 'text-gray-800'}`}>
             Simple, Transparent Pricing
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <p className={`text-xl max-w-3xl mx-auto ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
             Choose the plan that fits your learning needs. Start free and upgrade when you're ready.
           </p>
         </div>
@@ -116,31 +129,43 @@ export default function PricingPage() {
           {plans.map((plan, index) => (
             <Card 
               key={index} 
-              className={`relative transition-all duration-300 hover:shadow-xl ${
+              className={`relative transition-all duration-300 hover:shadow-xl transform hover:scale-105 ${
                 plan.popular 
-                  ? 'border-2 border-blue-500 bg-white dark:bg-gray-800 scale-105' 
-                  : 'border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm'
+                  ? `border-2 border-blue-500 scale-105 ${isDark ? 'bg-white/15 border-white/30' : 'bg-white/95'}` 
+                  : `border-0 backdrop-blur-sm ${isDark ? 'bg-white/10 border border-white/20 hover:bg-white/15' : 'bg-white/80 border border-gray-200/50 hover:bg-white/90 hover:shadow-2xl'}`
               }`}
             >
               {plan.popular && (
-                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white">
+                <Badge className={`absolute -top-3 left-1/2 transform -translate-x-1/2 ${
+                  isDark ? 'bg-blue-500/90 text-white' : 'bg-blue-500 text-white'
+                }`}>
                   {plan.badge}
                 </Badge>
               )}
               
               <CardHeader className="text-center">
                 <div className="flex justify-center mb-4">
-                  <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
+                  <div className={`p-3 rounded-lg ${
+                    isDark 
+                      ? 'bg-blue-900/30 text-blue-400' 
+                      : 'bg-blue-100 text-blue-600'
+                  }`}>
                     {plan.icon}
                   </div>
                 </div>
-                <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                <CardDescription className="text-gray-600 dark:text-gray-300">
+                <CardTitle className={`text-2xl ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                  {plan.name}
+                </CardTitle>
+                <CardDescription className={isDark ? 'text-gray-200' : 'text-gray-600'}>
                   {plan.description}
                 </CardDescription>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold">{plan.price}</span>
-                  <span className="text-gray-500 dark:text-gray-400">/{plan.period}</span>
+                  <span className={`text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                    {plan.price}
+                  </span>
+                  <span className={isDark ? 'text-gray-400' : 'text-gray-500'}>
+                    /{plan.period}
+                  </span>
                 </div>
               </CardHeader>
               
@@ -149,7 +174,9 @@ export default function PricingPage() {
                   {plan.features.map((feature, featureIndex) => (
                     <div key={featureIndex} className="flex items-center">
                       <Check className="h-4 w-4 text-green-500 mr-3 flex-shrink-0" />
-                      <span className="text-sm">{feature}</span>
+                      <span className={`text-sm ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                        {feature}
+                      </span>
                     </div>
                   ))}
                   {plan.limitations.map((limitation, limitationIndex) => (
@@ -165,7 +192,9 @@ export default function PricingPage() {
                   className={`w-full ${
                     plan.popular 
                       ? 'bg-blue-600 hover:bg-blue-700' 
-                      : 'bg-gray-900 dark:bg-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100'
+                      : isDark 
+                        ? 'bg-white text-gray-900 hover:bg-gray-100' 
+                        : 'bg-gray-900 text-white hover:bg-gray-800'
                   }`}
                 >
                   <Link href={plan.href}>
@@ -179,17 +208,27 @@ export default function PricingPage() {
 
         {/* Features Section */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-8">All Plans Include</h2>
+          <h2 className={`text-3xl font-bold mb-8 ${isDark ? 'text-white' : 'text-gray-800'}`}>
+            All Plans Include
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
               <div key={index} className="text-center">
                 <div className="flex justify-center mb-3">
-                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
+                  <div className={`p-2 rounded-lg ${
+                    isDark 
+                      ? 'bg-blue-900/30 text-blue-400' 
+                      : 'bg-blue-100 text-blue-600'
+                  }`}>
                     {feature.icon}
                   </div>
                 </div>
-                <h3 className="font-semibold mb-2">{feature.title}</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300">{feature.description}</p>
+                <h3 className={`font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                  {feature.title}
+                </h3>
+                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                  {feature.description}
+                </p>
               </div>
             ))}
           </div>
@@ -197,47 +236,73 @@ export default function PricingPage() {
 
         {/* FAQ Section */}
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+          <h2 className={`text-3xl font-bold text-center mb-8 ${isDark ? 'text-white' : 'text-gray-800'}`}>
+            Frequently Asked Questions
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
+            <Card className={`backdrop-blur-sm ${
+              isDark 
+                ? 'bg-white/10 border border-white/20' 
+                : 'bg-white/80 border border-gray-200/50'
+            }`}>
               <CardHeader>
-                <CardTitle className="text-lg">Can I cancel anytime?</CardTitle>
+                <CardTitle className={`text-lg ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                  Can I cancel anytime?
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className={isDark ? 'text-gray-200' : 'text-gray-600'}>
                   Yes! You can cancel your subscription at any time. No long-term commitments required.
                 </p>
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className={`backdrop-blur-sm ${
+              isDark 
+                ? 'bg-white/10 border border-white/20' 
+                : 'bg-white/80 border border-gray-200/50'
+            }`}>
               <CardHeader>
-                <CardTitle className="text-lg">Is there a free trial?</CardTitle>
+                <CardTitle className={`text-lg ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                  Is there a free trial?
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className={isDark ? 'text-gray-200' : 'text-gray-600'}>
                   Yes! Start with our free plan and upgrade to Pro with a 7-day free trial.
                 </p>
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className={`backdrop-blur-sm ${
+              isDark 
+                ? 'bg-white/10 border border-white/20' 
+                : 'bg-white/80 border border-gray-200/50'
+            }`}>
               <CardHeader>
-                <CardTitle className="text-lg">What payment methods do you accept?</CardTitle>
+                <CardTitle className={`text-lg ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                  What payment methods do you accept?
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className={isDark ? 'text-gray-200' : 'text-gray-600'}>
                   We accept all major credit cards, PayPal, and Apple Pay for your convenience.
                 </p>
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className={`backdrop-blur-sm ${
+              isDark 
+                ? 'bg-white/10 border border-white/20' 
+                : 'bg-white/80 border border-gray-200/50'
+            }`}>
               <CardHeader>
-                <CardTitle className="text-lg">Do you offer student discounts?</CardTitle>
+                <CardTitle className={`text-lg ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                  Do you offer student discounts?
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className={isDark ? 'text-gray-200' : 'text-gray-600'}>
                   Yes! Students get 50% off Pro plans with a valid .edu email address.
                 </p>
               </CardContent>
@@ -247,7 +312,11 @@ export default function PricingPage() {
 
         {/* CTA Section */}
         <div className="text-center mt-16">
-          <Card className="max-w-2xl mx-auto bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0">
+          <Card className={`max-w-2xl mx-auto border-0 ${
+            isDark 
+              ? 'bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm border border-white/20' 
+              : 'bg-gradient-to-r from-blue-600 to-purple-600'
+          } text-white`}>
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold mb-4">Still Have Questions?</h3>
               <p className="text-blue-100 mb-6">

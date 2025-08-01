@@ -13,6 +13,8 @@ import { Trophy, Clock, Target, CheckCircle, XCircle, RotateCcw, Play, BookOpen 
 import { motion, AnimatePresence } from "framer-motion"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
+import { GalaxyBackground } from "@/components/ui/galaxy-background"
+import { useTheme } from "next-themes"
 
 interface QuizQuestion {
   id: number
@@ -34,6 +36,8 @@ interface QuizResult {
 
 export default function QuizPage() {
   const { user } = useAuth()
+  const { theme } = useTheme()
+  const isDark = theme === 'dark'
   const { toast } = useToast()
 
   const [quizMode, setQuizMode] = useState<"select" | "active" | "results">("select")
@@ -157,14 +161,28 @@ export default function QuizPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Trophy className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">Please sign in</h2>
-          <p className="text-gray-600 mb-4">You need to be signed in to take quizzes.</p>
-          <Link href="/auth/login">
-            <Button>Sign In</Button>
-          </Link>
+      <div className="min-h-screen relative">
+        {/* Background */}
+        <div className="fixed inset-0 z-0">
+          <GalaxyBackground />
+        </div>
+        
+        {/* Content */}
+        <div className="relative z-10 flex items-center justify-center min-h-screen pt-32">
+          <Card className={`w-full max-w-md backdrop-blur-sm ${
+            isDark 
+              ? 'bg-white/10 border border-white/20' 
+              : 'bg-white/80 border border-gray-200/50'
+          }`}>
+            <CardContent className="text-center p-8">
+              <Trophy className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+              <h2 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>Please sign in</h2>
+              <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>You need to be signed in to take quizzes.</p>
+              <Link href="/auth/login">
+                <Button>Sign In</Button>
+              </Link>
+            </CardContent>
+          </Card>
         </div>
       </div>
     )
@@ -172,19 +190,25 @@ export default function QuizPage() {
 
   if (quizMode === "select") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900">
-        <div className="container mx-auto px-4 py-8">
+      <div className="min-h-screen relative">
+        {/* Background */}
+        <div className="fixed inset-0 z-0">
+          <GalaxyBackground />
+        </div>
+        
+        {/* Content */}
+        <div className="relative z-10 container mx-auto px-4 pt-32 pb-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
             <Trophy className="h-16 w-16 text-purple-600 mx-auto mb-4" />
-            <h1 className="text-4xl font-bold mb-4">Quiz Mode</h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
+            <h1 className={`text-4xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>Quiz Mode</h1>
+            <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
               Test your knowledge with AI-generated quiz questions
             </p>
           </motion.div>
 
           <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-6">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full backdrop-blur-sm bg-black/20 border border-white/20 hover:bg-black/30">
                 <CardHeader>
                   <div className="flex items-center justify-center mb-4">
                     <Target className="h-12 w-12 text-blue-600" />
@@ -204,7 +228,7 @@ export default function QuizPage() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full backdrop-blur-sm bg-black/20 border border-white/20 hover:bg-black/30">
                 <CardHeader>
                   <div className="flex items-center justify-center mb-4">
                     <Clock className="h-12 w-12 text-green-600" />
@@ -227,7 +251,7 @@ export default function QuizPage() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full backdrop-blur-sm bg-black/20 border border-white/20 hover:bg-black/30">
                 <CardHeader>
                   <div className="flex items-center justify-center mb-4">
                     <Trophy className="h-12 w-12 text-red-600" />
@@ -251,7 +275,7 @@ export default function QuizPage() {
           </div>
 
           <div className="text-center mt-12">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">Don't have any flashcards yet?</p>
+            <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Don't have any flashcards yet?</p>
             <Link href="/upload">
               <Button variant="outline">
                 <BookOpen className="h-4 w-4 mr-2" />
@@ -266,8 +290,14 @@ export default function QuizPage() {
 
   if (quizMode === "active") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900">
-        <div className="container mx-auto px-4 py-8">
+      <div className="min-h-screen relative">
+        {/* Background */}
+        <div className="fixed inset-0 z-0">
+          <GalaxyBackground />
+        </div>
+        
+        {/* Content */}
+        <div className="relative z-10 container mx-auto px-4 pt-32 pb-8">
           {/* Quiz Header */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
@@ -300,7 +330,7 @@ export default function QuizPage() {
                 exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.3 }}
               >
-                <Card className="mb-8">
+                <Card className="mb-8 backdrop-blur-sm bg-black/20 border border-white/20">
                   <CardHeader>
                     <div className="flex items-center justify-between mb-4">
                       <Badge variant="secondary">{currentQuestion?.deckName}</Badge>
@@ -361,30 +391,36 @@ export default function QuizPage() {
     const totalTime = results.reduce((sum, r) => sum + r.timeSpent, 0)
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900">
-        <div className="container mx-auto px-4 py-8">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center mb-8"
-          >
-            <Trophy className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
-            <h1 className="text-4xl font-bold mb-4">Quiz Complete!</h1>
-            <div className="flex items-center justify-center space-x-8 mb-8">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">{correctAnswers}</div>
-                <div className="text-sm text-gray-600">Correct</div>
+      <div className="min-h-screen relative">
+        {/* Background */}
+        <div className="fixed inset-0 z-0">
+          <GalaxyBackground />
+        </div>
+        
+        {/* Content */}
+        <div className="relative z-10 container mx-auto px-4 pt-32 pb-8">
+                      <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center mb-8"
+            >
+              <Trophy className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
+              <h1 className={`text-4xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>Quiz Complete!</h1>
+              <div className="flex items-center justify-center space-x-8 mb-8">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-600">{correctAnswers}</div>
+                  <div className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Correct</div>
+                </div>
+                <div className="text-center">
+                  <div className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>{results.length}</div>
+                  <div className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Total</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-blue-600">{accuracy.toFixed(1)}%</div>
+                  <div className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Accuracy</div>
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold">{results.length}</div>
-                <div className="text-sm text-gray-600">Total</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600">{accuracy.toFixed(1)}%</div>
-                <div className="text-sm text-gray-600">Accuracy</div>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
 
           {/* Results Details */}
           <div className="max-w-4xl mx-auto space-y-4 mb-8">
@@ -395,7 +431,7 @@ export default function QuizPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className={`border-l-4 ${result.isCorrect ? "border-l-green-500" : "border-l-red-500"}`}>
+                <Card className={`border-l-4 backdrop-blur-sm bg-black/20 border border-white/20 ${result.isCorrect ? "border-l-green-500" : "border-l-red-500"}`}>
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">

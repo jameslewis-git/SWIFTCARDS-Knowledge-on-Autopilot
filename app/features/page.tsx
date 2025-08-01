@@ -1,10 +1,17 @@
+"use client";
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowRight, Brain, Upload, BookOpen, Trophy, Users, Zap, Shield, Globe, Headphones } from "lucide-react"
 import Link from "next/link"
+import { GalaxyBackground } from "@/components/ui/galaxy-background"
+import { useTheme } from "next-themes"
 
 export default function FeaturesPage() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const features = [
     {
       icon: <Brain className="h-8 w-8" />,
@@ -67,14 +74,20 @@ export default function FeaturesPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-16">
+    <div className="relative min-h-screen">
+      {/* Galaxy Background */}
+      <div className="absolute inset-0 z-0">
+        <GalaxyBackground />
+      </div>
+      
+      {/* Content */}
+      <div className="relative z-10 container mx-auto px-4 pt-32 pb-16">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+          <h1 className={`text-4xl md:text-6xl font-bold mb-6 ${isDark ? 'text-white drop-shadow-2xl' : 'text-gray-800'}`}>
             Powerful Features
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <p className={`text-xl max-w-3xl mx-auto ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
             Transform your study materials into intelligent learning experiences with cutting-edge AI technology
           </p>
         </div>
@@ -82,20 +95,34 @@ export default function FeaturesPage() {
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {features.map((feature, index) => (
-            <Card key={index} className="group hover:shadow-lg transition-all duration-300 border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+            <Card key={index} className={`group hover:shadow-lg transition-all duration-300 border-0 backdrop-blur-sm transform hover:scale-105 ${
+              isDark 
+                ? 'bg-white/10 border border-white/20 hover:bg-white/15' 
+                : 'bg-white/80 border border-gray-200/50 hover:bg-white/90 hover:shadow-2xl'
+            }`}>
               <CardHeader>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
+                  <div className={`p-3 rounded-lg transition-transform group-hover:scale-110 ${
+                    isDark 
+                      ? 'bg-blue-900/30 text-blue-400' 
+                      : 'bg-blue-100 text-blue-600'
+                  }`}>
                     {feature.icon}
                   </div>
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="secondary" className={`text-xs ${
+                    isDark 
+                      ? 'bg-white/20 border border-white/30 text-white' 
+                      : 'bg-gray-100/80 border border-gray-200/50 text-gray-700'
+                  }`}>
                     {feature.badge}
                   </Badge>
                 </div>
-                <CardTitle className="text-xl">{feature.title}</CardTitle>
+                <CardTitle className={`text-xl ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                  {feature.title}
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-600 dark:text-gray-300">
+                <CardDescription className={isDark ? 'text-gray-200' : 'text-gray-600'}>
                   {feature.description}
                 </CardDescription>
               </CardContent>
@@ -105,10 +132,16 @@ export default function FeaturesPage() {
 
         {/* Tech Stack */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-8">Built with Modern Technology</h2>
+          <h2 className={`text-3xl font-bold mb-8 ${isDark ? 'text-white' : 'text-gray-800'}`}>
+            Built with Modern Technology
+          </h2>
           <div className="flex flex-wrap justify-center gap-3">
             {techStack.map((tech, index) => (
-              <Badge key={index} variant="outline" className="text-sm px-4 py-2">
+              <Badge key={index} variant="outline" className={`text-sm px-4 py-2 ${
+                isDark 
+                  ? 'border-white/30 text-white hover:bg-white/10' 
+                  : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+              }`}>
                 {tech}
               </Badge>
             ))}
@@ -117,7 +150,11 @@ export default function FeaturesPage() {
 
         {/* CTA Section */}
         <div className="text-center">
-          <Card className="max-w-2xl mx-auto bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0">
+          <Card className={`max-w-2xl mx-auto border-0 ${
+            isDark 
+              ? 'bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm border border-white/20' 
+              : 'bg-gradient-to-r from-blue-600 to-purple-600'
+          } text-white`}>
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold mb-4">Ready to Transform Your Learning?</h3>
               <p className="text-blue-100 mb-6">

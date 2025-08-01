@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input"
 import { Upload, FileText, ImageIcon, Video, Brain, CheckCircle, AlertCircle, Loader2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { motion } from "framer-motion"
+import { GalaxyBackground } from "@/components/ui/galaxy-background"
+import { useTheme } from "next-themes"
 
 interface UploadedFile {
   file: File
@@ -22,6 +24,8 @@ interface UploadedFile {
 }
 
 export default function UploadPage() {
+  const { theme } = useTheme()
+  const isDark = theme === 'dark'
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
   const [textInput, setTextInput] = useState("")
   const [deckName, setDeckName] = useState("")
@@ -173,11 +177,17 @@ export default function UploadPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen relative">
+      {/* Background */}
+      <div className="fixed inset-0 z-0">
+        <GalaxyBackground />
+      </div>
+      
+      {/* Content */}
+      <div className="relative z-10 container mx-auto px-4 pt-32 pb-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Upload Study Materials</h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <h1 className={`text-3xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>Upload Study Materials</h1>
+          <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
             Upload your PDFs, images, videos, or paste text to generate AI-powered flashcards
           </p>
         </motion.div>
@@ -191,7 +201,7 @@ export default function UploadPage() {
             className="space-y-6"
           >
             {/* Deck Settings */}
-            <Card>
+            <Card className="backdrop-blur-sm bg-black/20 border border-white/20">
               <CardHeader>
                 <CardTitle>Deck Settings</CardTitle>
                 <CardDescription>Configure your new flashcard deck</CardDescription>
@@ -219,7 +229,7 @@ export default function UploadPage() {
             </Card>
 
             {/* File Upload */}
-            <Card>
+            <Card className="backdrop-blur-sm bg-black/20 border border-white/20">
               <CardHeader>
                 <CardTitle>Upload Files</CardTitle>
                 <CardDescription>
@@ -250,7 +260,7 @@ export default function UploadPage() {
             </Card>
 
             {/* Text Input */}
-            <Card>
+            <Card className="backdrop-blur-sm bg-black/20 border border-white/20">
               <CardHeader>
                 <CardTitle>Or Paste Text</CardTitle>
                 <CardDescription>Paste your study notes or any text content to generate flashcards</CardDescription>
@@ -272,7 +282,7 @@ export default function UploadPage() {
 
           {/* Processing Status */}
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
-            <Card>
+            <Card className="backdrop-blur-sm bg-black/20 border border-white/20">
               <CardHeader>
                 <CardTitle>Processing Status</CardTitle>
                 <CardDescription>Track the progress of your uploaded files</CardDescription>

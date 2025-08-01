@@ -93,12 +93,84 @@ const config: Config = {
   				to: {
   					backgroundPosition: '350% 50%, 350% 50%'
   				}
-  			}
+  			},
+  			'spin-slow': {
+  				from: {
+  					transform: 'rotate(0deg)'
+  				},
+  				to: {
+  					transform: 'rotate(360deg)'
+  				}
+  			},
+  			'spin-slow-reverse': {
+  				from: {
+  					transform: 'rotate(360deg)'
+  				},
+  				to: {
+  					transform: 'rotate(0deg)'
+  				}
+  			},
+  			'float': {
+  				'0%, 100%': {
+  					transform: 'translateY(0px)'
+  				},
+  				'50%': {
+  					transform: 'translateY(-20px)'
+  				}
+  			},
+  			'float-delayed': {
+  				'0%, 100%': {
+  					transform: 'translateY(0px)'
+  				},
+  				'50%': {
+  					transform: 'translateY(-15px)'
+  				}
+  			},
+  			'float-slow': {
+  				'0%, 100%': {
+  					transform: 'translateY(0px)'
+  				},
+  				'50%': {
+  					transform: 'translateY(-25px)'
+  				}
+  			},
+  			'float-delayed-2': {
+  				'0%, 100%': {
+  					transform: 'translateY(0px)'
+  				},
+  				'50%': {
+  					transform: 'translateY(-30px)'
+  				}
+  			},
+  			'wave': {
+  				'0%, 100%': {
+  					transform: 'translateX(0)'
+  				},
+  				'50%': {
+  					transform: 'translateX(-25%)'
+  				}
+  			},
+  			"pulse-slow": {
+  				'0%, 100%': {
+  					transform: 'translateX(-100%)',
+  				},
+  				'50%': {
+  					transform: 'translateX(100%)',
+  				},
+  			},
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
-  			'aurora': 'aurora 60s linear infinite'
+  			'aurora': 'aurora 60s linear infinite',
+  			'spin-slow': 'spin-slow 20s linear infinite',
+  			'spin-slow-reverse': 'spin-slow-reverse 25s linear infinite',
+  			'float': 'float 6s ease-in-out infinite',
+  			'float-delayed': 'float-delayed 8s ease-in-out infinite',
+  			'float-slow': 'float-slow 10s ease-in-out infinite',
+  			'float-delayed-2': 'float-delayed-2 12s ease-in-out infinite',
+  			'wave': 'wave 8s ease-in-out infinite',
+  			"pulse-slow": "pulse-slow 3s ease-in-out infinite",
   		}
   	}
   },

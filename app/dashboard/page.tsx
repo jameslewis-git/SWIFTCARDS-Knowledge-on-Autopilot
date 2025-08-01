@@ -9,6 +9,8 @@ import { Progress } from "@/components/ui/progress"
 import { Upload, BookOpen, Trophy, TrendingUp, Brain, Target, Zap } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
+import { GalaxyBackground } from "@/components/ui/galaxy-background"
+import { useTheme } from "next-themes"
 
 interface DeckStats {
   totalDecks: number
@@ -19,6 +21,8 @@ interface DeckStats {
 
 export default function DashboardPage() {
   const { user } = useAuth()
+  const { theme } = useTheme()
+  const isDark = theme === 'dark'
   const [stats, setStats] = useState<DeckStats>({
     totalDecks: 0,
     totalCards: 0,
@@ -47,26 +51,46 @@ export default function DashboardPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Brain className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">Please sign in</h2>
-          <p className="text-gray-600 mb-4">You need to be signed in to access your dashboard.</p>
-          <Link href="/auth/login">
-            <Button>Sign In</Button>
-          </Link>
+      <div className="min-h-screen relative">
+        {/* Background */}
+        <div className="fixed inset-0 z-0">
+          <GalaxyBackground />
+        </div>
+        
+        {/* Content */}
+        <div className="relative z-10 flex items-center justify-center min-h-screen pt-32">
+          <Card className={`w-full max-w-md backdrop-blur-sm ${
+            isDark 
+              ? 'bg-white/10 border border-white/20' 
+              : 'bg-white/80 border border-gray-200/50'
+          }`}>
+            <CardContent className="text-center p-8">
+              <Brain className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+              <h2 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>Please sign in</h2>
+              <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>You need to be signed in to access your dashboard.</p>
+              <Link href="/auth/login">
+                <Button>Sign In</Button>
+              </Link>
+            </CardContent>
+          </Card>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen relative">
+      {/* Background */}
+      <div className="fixed inset-0 z-0">
+        <GalaxyBackground />
+      </div>
+      
+      {/* Content */}
+      <div className="relative z-10 container mx-auto px-4 pt-32 pb-8">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Welcome back, {user.name}!</h1>
-          <p className="text-gray-600 dark:text-gray-400">Ready to continue your learning journey?</p>
+          <h1 className={`text-3xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>Welcome back, {user.name}!</h1>
+          <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Ready to continue your learning journey?</p>
         </motion.div>
 
         {/* Stats Cards */}
@@ -76,7 +100,7 @@ export default function DashboardPage() {
           transition={{ delay: 0.1 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
         >
-          <Card>
+          <Card className="backdrop-blur-sm bg-black/20 border border-white/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Decks</CardTitle>
               <BookOpen className="h-4 w-4 text-muted-foreground" />
@@ -86,7 +110,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="backdrop-blur-sm bg-black/20 border border-white/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Cards</CardTitle>
               <Brain className="h-4 w-4 text-muted-foreground" />
@@ -96,7 +120,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="backdrop-blur-sm bg-black/20 border border-white/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Studied Today</CardTitle>
               <Target className="h-4 w-4 text-muted-foreground" />
@@ -106,7 +130,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="backdrop-blur-sm bg-black/20 border border-white/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Study Streak</CardTitle>
               <Zap className="h-4 w-4 text-muted-foreground" />
@@ -124,7 +148,7 @@ export default function DashboardPage() {
           transition={{ delay: 0.2 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
         >
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer backdrop-blur-sm bg-black/20 border border-white/20 hover:bg-black/30">
             <Link href="/upload">
               <CardHeader>
                 <div className="flex items-center space-x-2">
@@ -136,7 +160,7 @@ export default function DashboardPage() {
             </Link>
           </Card>
 
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer backdrop-blur-sm bg-black/20 border border-white/20 hover:bg-black/30">
             <Link href="/decks">
               <CardHeader>
                 <div className="flex items-center space-x-2">
@@ -148,7 +172,7 @@ export default function DashboardPage() {
             </Link>
           </Card>
 
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer backdrop-blur-sm bg-black/20 border border-white/20 hover:bg-black/30">
             <Link href="/quiz">
               <CardHeader>
                 <div className="flex items-center space-x-2">
@@ -169,7 +193,7 @@ export default function DashboardPage() {
           className="grid grid-cols-1 lg:grid-cols-2 gap-6"
         >
           {/* Level Progress */}
-          <Card>
+          <Card className="backdrop-blur-sm bg-black/20 border border-white/20">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <TrendingUp className="h-5 w-5" />
@@ -189,7 +213,7 @@ export default function DashboardPage() {
           </Card>
 
           {/* Badges */}
-          <Card>
+          <Card className="backdrop-blur-sm bg-black/20 border border-white/20">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Trophy className="h-5 w-5" />

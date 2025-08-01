@@ -17,6 +17,8 @@ import {
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { useToast } from "@/hooks/use-toast"
+import { GalaxyBackground } from "@/components/ui/galaxy-background"
+import { useTheme } from "next-themes"
 
 interface Deck {
   _id: string
@@ -36,6 +38,8 @@ interface Deck {
 export default function DecksPage() {
   const { user } = useAuth()
   const { toast } = useToast()
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const [decks, setDecks] = useState<Deck[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
@@ -95,11 +99,21 @@ export default function DecksPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
+      <div className="relative min-h-screen flex items-center justify-center">
+        {/* Galaxy Background */}
+        <div className="absolute inset-0 z-0">
+          <GalaxyBackground />
+        </div>
+        
+        {/* Content */}
+        <div className="relative z-10 text-center pt-32">
           <BookOpen className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">Please sign in</h2>
-          <p className="text-gray-600 mb-4">You need to be signed in to view your decks.</p>
+          <h2 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>
+            Please sign in
+          </h2>
+          <p className={`mb-4 ${isDark ? 'text-gray-200' : 'text-gray-600'}`}>
+            You need to be signed in to view your decks.
+          </p>
           <Link href="/auth/login">
             <Button>Sign In</Button>
           </Link>
@@ -109,14 +123,22 @@ export default function DecksPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4 py-8">
+    <div className="relative min-h-screen">
+      {/* Galaxy Background */}
+      <div className="absolute inset-0 z-0">
+        <GalaxyBackground />
+      </div>
+      
+      {/* Content */}
+      <div className="relative z-10 container mx-auto px-4 pt-32 pb-8">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-3xl font-bold mb-2">My Flashcard Decks</h1>
-              <p className="text-gray-600 dark:text-gray-400">
+              <h1 className={`text-3xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                My Flashcard Decks
+              </h1>
+              <p className={isDark ? 'text-gray-200' : 'text-gray-600'}>
                 Manage and study your AI-generated flashcard collections
               </p>
             </div>
@@ -133,14 +155,18 @@ export default function DecksPage() {
                 placeholder="Search decks..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className={`pl-10 ${isDark ? 'bg-white/10 border-white/20 text-white placeholder:text-gray-400' : ''}`}
               />
             </div>
             <div className="flex gap-2">
               <select
                 value={selectedTag}
                 onChange={(e) => setSelectedTag(e.target.value)}
-                className="px-3 py-2 border rounded-md bg-background"
+                className={`px-3 py-2 border rounded-md bg-background ${
+                  isDark 
+                    ? 'bg-white/10 border-white/20 text-white' 
+                    : 'bg-white border-gray-300 text-gray-800'
+                }`}
               >
                 <option value="">All Tags</option>
                 {allTags.map((tag) => (
@@ -157,14 +183,26 @@ export default function DecksPage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
-              <Card key={i} className="animate-pulse">
+              <Card key={i} className={`animate-pulse backdrop-blur-sm ${
+                isDark 
+                  ? 'bg-white/10 border border-white/20' 
+                  : 'bg-white/80 border border-gray-200/50'
+              }`}>
                 <CardHeader>
-                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                  <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                  <div className={`h-4 rounded w-3/4 mb-2 ${
+                    isDark ? 'bg-white/20' : 'bg-gray-200'
+                  }`}></div>
+                  <div className={`h-3 rounded w-1/2 ${
+                    isDark ? 'bg-white/20' : 'bg-gray-200'
+                  }`}></div>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
-                  <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                  <div className={`h-3 rounded w-full mb-2 ${
+                    isDark ? 'bg-white/20' : 'bg-gray-200'
+                  }`}></div>
+                  <div className={`h-3 rounded w-2/3 ${
+                    isDark ? 'bg-white/20' : 'bg-gray-200'
+                  }`}></div>
                 </CardContent>
               </Card>
             ))}
@@ -172,8 +210,10 @@ export default function DecksPage() {
         ) : filteredDecks.length === 0 ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12">
             <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">No decks found</h3>
-            <p className="text-gray-600 mb-6">
+            <h3 className={`text-xl font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>
+              No decks found
+            </h3>
+            <p className={`mb-6 ${isDark ? 'text-gray-200' : 'text-gray-600'}`}>
               {searchTerm || selectedTag
                 ? "Try adjusting your search criteria"
                 : "Create your first flashcard deck to get started"}
@@ -195,12 +235,20 @@ export default function DecksPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="hover:shadow-lg transition-shadow">
+                <Card className={`hover:shadow-lg transition-shadow backdrop-blur-sm ${
+                  isDark 
+                    ? 'bg-white/10 border border-white/20 hover:bg-white/15' 
+                    : 'bg-white/80 border border-gray-200/50 hover:bg-white/90 hover:shadow-2xl'
+                }`}>
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <CardTitle className="text-lg mb-1">{deck.name}</CardTitle>
-                        <CardDescription className="line-clamp-2">{deck.description}</CardDescription>
+                        <CardTitle className={`text-lg mb-1 ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                          {deck.name}
+                        </CardTitle>
+                        <CardDescription className={`line-clamp-2 ${isDark ? 'text-gray-200' : 'text-gray-600'}`}>
+                          {deck.description}
+                        </CardDescription>
                       </div>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -237,7 +285,9 @@ export default function DecksPage() {
                   <CardContent>
                     <div className="space-y-4">
                       {/* Stats */}
-                      <div className="flex items-center justify-between text-sm text-gray-600">
+                      <div className={`flex items-center justify-between text-sm ${
+                        isDark ? 'text-gray-300' : 'text-gray-600'
+                      }`}>
                         <div className="flex items-center">
                           <Target className="h-4 w-4 mr-1" />
                           {deck.cards.length} cards
@@ -252,12 +302,20 @@ export default function DecksPage() {
                       {deck.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1">
                           {deck.tags.slice(0, 3).map((tag) => (
-                            <Badge key={tag} variant="secondary" className="text-xs">
+                            <Badge key={tag} variant="secondary" className={`text-xs ${
+                              isDark 
+                                ? 'bg-white/20 border border-white/30 text-white' 
+                                : 'bg-gray-100/80 border border-gray-200/50 text-gray-700'
+                            }`}>
                               {tag}
                             </Badge>
                           ))}
                           {deck.tags.length > 3 && (
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge variant="secondary" className={`text-xs ${
+                              isDark 
+                                ? 'bg-white/20 border border-white/30 text-white' 
+                                : 'bg-gray-100/80 border border-gray-200/50 text-gray-700'
+                            }`}>
                               +{deck.tags.length - 3}
                             </Badge>
                           )}

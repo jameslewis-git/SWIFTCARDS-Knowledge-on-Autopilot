@@ -94,3 +94,44 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Hide Spline attribution badge */
+@layer utilities {
+  /* Hide Spline badge and attribution */
+  [data-spline-badge],
+  .spline-badge,
+  [class*="spline-badge"],
+  [id*="spline-badge"],
+  iframe[src*="spline.design"] + div,
+  iframe[src*="spline.design"]::after,
+  iframe[src*="spline.design"]::before {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+  
+  /* Hide any Spline-related elements */
+  [class*="spline"][class*="badge"],
+  [id*="spline"][id*="badge"],
+  [class*="attribution"],
+  [id*="attribution"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+/* Anime NavBar shine animation */
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
