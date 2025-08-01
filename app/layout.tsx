@@ -6,6 +6,8 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { SupabaseAuthProvider } from "@/components/supabase-auth-provider"
 import { FloatingNavbar } from "@/components/floating-navbar"
+import { ErrorBoundary } from "@/components/error-boundary"
+import { DebugAuth } from "@/components/debug-auth"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -24,11 +26,14 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <SupabaseAuthProvider>
-            <FloatingNavbar />
-            <main>{children}</main>
-            <Toaster />
-          </SupabaseAuthProvider>
+          <ErrorBoundary>
+            <SupabaseAuthProvider>
+              <FloatingNavbar />
+              <main>{children}</main>
+              <Toaster />
+              <DebugAuth />
+            </SupabaseAuthProvider>
+          </ErrorBoundary>
         </ThemeProvider>
       </body>
     </html>

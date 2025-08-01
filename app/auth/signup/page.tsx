@@ -44,11 +44,15 @@ export default function SignupPage() {
         title: "Welcome to SWIFTCARDS!",
         description: "Your account has been created successfully.",
       })
-      router.push("/dashboard")
+      // Wait a moment for auth state to update
+      setTimeout(() => {
+        router.push("/dashboard")
+      }, 1000)
     } catch (error) {
+      console.error("Signup error:", error)
       toast({
         title: "Signup failed",
-        description: "Please try again with different credentials.",
+        description: error instanceof Error ? error.message : "Please try again with different credentials.",
         variant: "destructive",
       })
     } finally {

@@ -64,7 +64,7 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
   }, [])
 
   const signup = async (name: string, email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -75,6 +75,18 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
     })
     if (error) {
       throw new Error(error.message)
+    }
+    
+    // If signup is successful and user is confirmed, sign them in
+    if (data.user && !data.user.email_confirmed_at) {
+      // For immediate sign-in (if email confirmation is not required)
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+      if (signInError) {
+        throw new Error(signInError.message)
+      }
     }
   }
 
