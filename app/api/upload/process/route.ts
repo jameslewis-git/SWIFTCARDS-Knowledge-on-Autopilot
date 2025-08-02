@@ -50,9 +50,9 @@ export async function POST(request: NextRequest) {
     const { data: deck, error: deckError } = await supabase
       .from('decks')
       .insert({
-        name: deckName || file.name,
-        description: `Generated from ${file.name}`,
-        tags: tags ? tags.split(",").map((tag) => tag.trim()) : [],
+      name: deckName || file.name,
+      description: `Generated from ${file.name}`,
+      tags: tags ? tags.split(",").map((tag) => tag.trim()) : [],
         user_id: user.id,
         created_at: new Date().toISOString(),
       })
@@ -226,14 +226,14 @@ Format your response as a JSON array of objects with "question" and "answer" fie
       }
       
       return {
-        id: index + 1,
-        question: card.question,
-        answer: card.answer,
-        difficulty: "medium",
-        lastReviewed: null,
-        nextReview: new Date(),
-        reviewCount: 0,
-        correctCount: 0,
+      id: index + 1,
+      question: card.question,
+      answer: card.answer,
+      difficulty: "medium",
+      lastReviewed: null,
+      nextReview: new Date(),
+      reviewCount: 0,
+      correctCount: 0,
       }
     })
 
