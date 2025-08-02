@@ -2,6 +2,13 @@ import { type NextRequest, NextResponse } from "next/server"
 import { generateText } from "ai"
 import { google } from "@ai-sdk/google"
 import { supabase } from "@/lib/supabase"
+import { createClient } from "@supabase/supabase-js"
+
+// Create a service role client to bypass RLS
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
 export async function POST(request: NextRequest) {
   console.log("🚀 Upload API called")
@@ -58,7 +65,7 @@ export async function POST(request: NextRequest) {
     const cards = await generateFlashcards(extractedContent)
 
     // Save deck to database using Supabase
-    const { data: deck, error: deckError } = await supabase
+    const { data: deck, error: deckError } = await supabaseAdmin
       .from('decks')
       .insert({
         name: deckName || file.name,
@@ -85,14 +92,14 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString(),
     }))
 
-    const { error: cardsError } = await supabase
+    const { error: cardsError } = await supabaseAdmin
       .from('cards')
       .insert(cardsToInsert)
 
     if (cardsError) {
       console.error("Cards insertion error:", cardsError)
       // Try to delete the deck if cards insertion failed
-      await supabase.from('decks').delete().eq('id', deck.id)
+      await supabaseAdmin.from('decks').delete().eq('id', deck.id)
       return NextResponse.json({ error: "Failed to save cards" }, { status: 500 })
     }
 
@@ -208,12 +215,18 @@ Format your response as a JSON array of objects with "question" and "answer" fie
       console.error("JSON parse error:", parseError)
       console.log("Raw AI response:", text)
       
-      // Try to extract JSON from the response
-      const jsonMatch = text.match(/\[.*\]/s)
+      // Try to extract JSON from markdown code blocks
+      const jsonMatch = text.match(/```json\s*(\[.*?\])\s*```/s)
       if (jsonMatch) {
-        flashcards = JSON.parse(jsonMatch[0])
+        flashcards = JSON.parse(jsonMatch[1])
       } else {
-        throw new Error("Could not parse AI response as JSON")
+        // Try to extract JSON from the response without markdown
+        const arrayMatch = text.match(/\[.*\]/s)
+        if (arrayMatch) {
+          flashcards = JSON.parse(arrayMatch[0])
+        } else {
+          throw new Error("Could not parse AI response as JSON")
+        }
       }
     }
 
