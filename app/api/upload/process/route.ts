@@ -61,11 +61,13 @@ export async function POST(request: NextRequest) {
     const { data: deck, error: deckError } = await supabase
       .from('decks')
       .insert({
-      name: deckName || file.name,
-      description: `Generated from ${file.name}`,
-      tags: tags ? tags.split(",").map((tag) => tag.trim()) : [],
+        name: deckName || file.name,
+        description: `Generated from ${file.name}`,
+        tags: tags ? tags.split(",").map((tag) => tag.trim()) : [],
         user_id: user.id,
+        stats: { total_views: 0, total_study_sessions: 0, average_score: 0 },
         created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       })
       .select()
       .single()

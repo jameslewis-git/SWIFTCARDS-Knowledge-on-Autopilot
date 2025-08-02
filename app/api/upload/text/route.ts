@@ -36,7 +36,9 @@ export async function POST(request: NextRequest) {
         description: "Generated from text input",
         tags: tags ? tags.split(",").map((tag: string) => tag.trim()) : [],
         user_id: user.id,
+        stats: { total_views: 0, total_study_sessions: 0, average_score: 0 },
         created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       })
       .select()
       .single()
