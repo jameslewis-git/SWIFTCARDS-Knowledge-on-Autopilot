@@ -4,20 +4,31 @@ import { google } from "@ai-sdk/google"
 import { supabase } from "@/lib/supabase"
 
 export async function POST(request: NextRequest) {
+  console.log("🚀 Upload API called")
+  
   try {
     // Get the authorization header
     const authHeader = request.headers.get('authorization')
+    console.log("🔑 Auth header:", authHeader ? "Present" : "Missing")
+    
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.log("❌ Unauthorized - No valid auth header")
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     const token = authHeader.substring(7) // Remove 'Bearer ' prefix
+    console.log("🔑 Token length:", token.length)
     
     // Verify the token with Supabase
     const { data: { user }, error } = await supabase.auth.getUser(token)
+    console.log("👤 User verification:", user ? "Success" : "Failed", error)
+    
     if (error || !user) {
+      console.log("❌ User verification failed:", error)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
+
+    console.log("✅ User authenticated:", user.email)
 
     const formData = await request.formData()
     const file = formData.get("file") as File
