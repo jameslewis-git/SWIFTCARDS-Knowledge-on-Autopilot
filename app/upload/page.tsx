@@ -89,7 +89,8 @@ export default function UploadPage() {
       })
 
       if (!response.ok) {
-        throw new Error("Upload failed")
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }))
+        throw new Error(errorData.error || `Upload failed with status ${response.status}`)
       }
 
       const result = await response.json()
@@ -157,7 +158,8 @@ export default function UploadPage() {
       })
 
       if (!response.ok) {
-        throw new Error("Processing failed")
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }))
+        throw new Error(errorData.error || `Processing failed with status ${response.status}`)
       }
 
       const result = await response.json()
