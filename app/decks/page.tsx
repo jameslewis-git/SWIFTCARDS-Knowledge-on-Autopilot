@@ -54,24 +54,38 @@ export default function DecksPage() {
 
   const fetchDecks = async () => {
     try {
-      // Get the session token
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        console.error("No session found")
+      // Get the current user
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        console.error("No user found")
         return
       }
 
-      const response = await fetch("/api/decks", {
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`
-        }
-      })
-      if (response.ok) {
-        const data = await response.json()
-        setDecks(data.decks || [])
-      } else {
-        console.error("Failed to fetch decks:", response.status)
+      // Fetch decks directly from Supabase
+      const { data: decks, error } = await supabase
+        .from('decks')
+        .select(`
+          id,
+          name,
+          description,
+          tags,
+          created_at,
+          updated_at,
+          stats,
+          cards (
+            id,
+            front
+          )
+        `)
+        .eq('user_id', user.id)
+        .order('updated_at', { ascending: false })
+
+      if (error) {
+        console.error("Database error:", error)
+        return
       }
+
+      setDecks(decks || [])
     } catch (error) {
       console.error("Failed to fetch decks:", error)
     } finally {
@@ -81,17 +95,28 @@ export default function DecksPage() {
 
   const deleteDeck = async (deckId: string) => {
     try {
-      const response = await fetch(`/api/decks/${deckId}`, {
-        method: "DELETE",
-      })
+      // Delete the deck directly from Supabase
+      const { error } = await supabase
+        .from('decks')
+        .delete()
+        .eq('id', deckId)
 
-      if (response.ok) {
-        setDecks(decks.filter((deck) => deck.id !== deckId))
+      if (error) {
+        console.error("Delete error:", error)
         toast({
-          title: "Deck deleted",
-          description: "The deck has been successfully deleted.",
+          title: "Error",
+          description: "Failed to delete deck.",
+          variant: "destructive",
         })
+        return
       }
+
+      // Remove from local state
+      setDecks(decks.filter((deck) => deck.id !== deckId))
+      toast({
+        title: "Deck deleted",
+        description: "The deck has been successfully deleted.",
+      })
     } catch (error) {
       toast({
         title: "Error",
