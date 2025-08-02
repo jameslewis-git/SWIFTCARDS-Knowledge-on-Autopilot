@@ -16,6 +16,7 @@ import { GalaxyBackground } from "@/components/ui/galaxy-background"
 import { useTheme } from "next-themes"
 import { useSupabaseAuth } from "@/hooks/use-supabase-auth"
 import { supabase } from "@/lib/supabase"
+import { UploadSuccessModal } from "@/components/upload-success-modal"
 
 interface UploadedFile {
   file: File
@@ -33,6 +34,8 @@ export default function UploadPage() {
   const [textInput, setTextInput] = useState("")
   const [deckName, setDeckName] = useState("")
   const [tags, setTags] = useState("")
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [successDeckData, setSuccessDeckData] = useState<{ id: string; name: string; cardCount: number } | null>(null)
   const { toast } = useToast()
 
   const onDrop = useCallback(
@@ -109,6 +112,14 @@ export default function UploadPage() {
         ),
       )
 
+      // Show success modal
+      setSuccessDeckData({
+        id: result.deckId,
+        name: result.deckName || fileObj.file.name,
+        cardCount: result.cards.length
+      })
+      setShowSuccessModal(true)
+
       toast({
         title: "Success!",
         description: `Generated ${result.cards.length} flashcards from ${fileObj.file.name}`,
@@ -163,6 +174,14 @@ export default function UploadPage() {
       }
 
       const result = await response.json()
+
+      // Show success modal
+      setSuccessDeckData({
+        id: result.deckId,
+        name: result.deckName || "Text Input Deck",
+        cardCount: result.cards.length
+      })
+      setShowSuccessModal(true)
 
       toast({
         title: "Success!",
@@ -356,6 +375,20 @@ export default function UploadPage() {
           </motion.div>
         </div>
       </div>
+
+      {/* Success Modal */}
+      {successDeckData && (
+        <UploadSuccessModal
+          isOpen={showSuccessModal}
+          onClose={() => {
+            setShowSuccessModal(false)
+            setSuccessDeckData(null)
+          }}
+          deckId={successDeckData.id}
+          deckName={successDeckData.name}
+          cardCount={successDeckData.cardCount}
+        />
+      )}
     </div>
   )
 }

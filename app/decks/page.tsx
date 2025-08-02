@@ -19,19 +19,20 @@ import { motion } from "framer-motion"
 import { useToast } from "@/hooks/use-toast"
 import { GalaxyBackground } from "@/components/ui/galaxy-background"
 import { useTheme } from "next-themes"
+import { supabase } from "@/lib/supabase"
 
 interface Deck {
-  _id: string
+  id: string
   name: string
   description: string
   cards: any[]
   tags: string[]
-  createdAt: string
-  updatedAt: string
+  created_at: string
+  updated_at: string
   stats: {
-    totalViews: number
-    totalStudySessions: number
-    averageScore: number
+    total_views: number
+    total_study_sessions: number
+    average_score: number
   }
 }
 
@@ -53,10 +54,23 @@ export default function DecksPage() {
 
   const fetchDecks = async () => {
     try {
-      const response = await fetch("/api/decks")
+      // Get the session token
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        console.error("No session found")
+        return
+      }
+
+      const response = await fetch("/api/decks", {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        }
+      })
       if (response.ok) {
         const data = await response.json()
-        setDecks(data.decks)
+        setDecks(data.decks || [])
+      } else {
+        console.error("Failed to fetch decks:", response.status)
       }
     } catch (error) {
       console.error("Failed to fetch decks:", error)
@@ -72,7 +86,7 @@ export default function DecksPage() {
       })
 
       if (response.ok) {
-        setDecks(decks.filter((deck) => deck._id !== deckId))
+        setDecks(decks.filter((deck) => deck.id !== deckId))
         toast({
           title: "Deck deleted",
           description: "The deck has been successfully deleted.",
@@ -226,7 +240,7 @@ export default function DecksPage() {
           >
             {filteredDecks.map((deck, index) => (
               <motion.div
-                key={deck._id}
+                key={deck.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
@@ -254,13 +268,13 @@ export default function DecksPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem asChild>
-                            <Link href={`/study/${deck._id}`}>
+                            <Link href={`/study/${deck.id}`}>
                               <Play className="h-4 w-4 mr-2" />
                               Study
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild>
-                            <Link href={`/decks/${deck._id}/edit`}>
+                            <Link href={`/decks/${deck.id}/edit`}>
                               <Edit className="h-4 w-4 mr-2" />
                               Edit
                             </Link>
@@ -270,7 +284,7 @@ export default function DecksPage() {
                             Share
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-red-600" onClick={() => deleteDeck(deck._id)}>
+                          <DropdownMenuItem className="text-red-600" onClick={() => deleteDeck(deck.id)}>
                             <Trash2 className="h-4 w-4 mr-2" />
                             Delete
                           </DropdownMenuItem>
@@ -286,16 +300,16 @@ export default function DecksPage() {
                       }`}>
                         <div className="flex items-center">
                           <Target className="h-4 w-4 mr-1" />
-                          {deck.cards.length} cards
+                          {deck.cards?.length || 0} cards
                         </div>
                         <div className="flex items-center">
                           <Calendar className="h-4 w-4 mr-1" />
-                          {new Date(deck.createdAt).toLocaleDateString()}
+                          {new Date(deck.created_at).toLocaleDateString()}
                         </div>
                       </div>
 
                       {/* Tags */}
-                      {deck.tags.length > 0 && (
+                      {deck.tags && deck.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1">
                           {deck.tags.slice(0, 3).map((tag) => (
                             <Badge key={tag} variant="secondary" className={`text-xs ${
@@ -319,7 +333,7 @@ export default function DecksPage() {
                       )}
 
                       {/* Study Button */}
-                      <Link href={`/study/${deck._id}`}>
+                      <Link href={`/study/${deck.id}`}>
                         <Button className="w-full bg-transparent" variant="outline">
                           <Play className="h-4 w-4 mr-2" />
                           Start Studying

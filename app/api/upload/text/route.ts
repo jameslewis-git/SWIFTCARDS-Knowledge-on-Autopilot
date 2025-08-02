@@ -76,6 +76,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       deckId: deck.id,
+      deckName: deck.name,
       cards: cards.length,
       message: "Flashcards generated successfully",
     })
